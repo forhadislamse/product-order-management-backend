@@ -47,6 +47,13 @@ const getProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.getProductByIdFromDb(productId);
+    if (!result) {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found',
+        data: null,
+      });
+    }
     res.status(200).json({
       success: true,
       message: 'specific Product fetched successfully!',
@@ -72,6 +79,13 @@ const updateProductById = async (req: Request, res: Response) => {
       productId,
       updates,
     );
+    if (!result) {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found for Update',
+        data: null,
+      });
+    }
     // console.log(result);
     res.status(200).json({
       success: true,
@@ -88,9 +102,34 @@ const updateProductById = async (req: Request, res: Response) => {
   }
 };
 
+const deleteProductById = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const result = await ProductServices.deleteProductByIdFromDb(productId);
+    if (result.deletedCount === 0) {
+      res.status(404).json({
+        success: false,
+        message: 'Product not found for delete!',
+        data: null,
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully!',
+      data: null,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: (error as Error).message || 'Something went wrong',
+      error: error,
+    });
+  }
+};
 export const ProductControllers = {
   createProduct,
   getAllProducts,
   getProductById,
   updateProductById,
+  deleteProductById,
 };

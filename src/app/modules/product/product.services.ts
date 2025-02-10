@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { TProduct } from './product.interface';
 import { Product } from './product.model';
 
@@ -13,11 +12,11 @@ const getAllProductsFromDb = async () => {
 };
 
 const getProductByIdFromDb = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) {
-    // Validate ObjectId format
-    throw new Error('Invalid Product ID format');
-  }
-  const result = await Product.findById(id);
+  // if (!Types.ObjectId.isValid(id)) {
+  //   // Validate ObjectId format
+  //   throw new Error('Invalid Product ID format');
+  // }
+  const result = await Product.findById({ _id: id });
   return result;
 };
 
@@ -30,14 +29,19 @@ const updateProductByIdIntoDb = async (
     runValidators: true,
     // arrayFilters: [{ 'elem.value': 'Green' }], //for array of object we need positional operator
   });
-  if (!result) {
-    throw new Error('Product not found or update failed');
-  }
+
   return result;
 };
+
+const deleteProductByIdFromDb = async (id: string) => {
+  const result = await Product.deleteOne({ _id: id });
+  return result;
+};
+
 export const ProductServices = {
   createProductIntoDb,
   getAllProductsFromDb,
   getProductByIdFromDb,
   updateProductByIdIntoDb,
+  deleteProductByIdFromDb,
 };
