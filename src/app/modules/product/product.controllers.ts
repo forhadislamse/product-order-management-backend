@@ -49,7 +49,33 @@ const getProductById = async (req: Request, res: Response) => {
     const result = await ProductServices.getProductByIdFromDb(productId);
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
+      message: 'specific Product fetched successfully!',
+      data: result,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    res.status(400).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
+
+const updateProductById = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    // console.log(req.params.productId);
+    const updates = req.body;
+    // console.log(updates);
+    const result = await ProductServices.updateProductByIdIntoDb(
+      productId,
+      updates,
+    );
+    // console.log(result);
+    res.status(200).json({
+      success: true,
+      message: 'Product updated successfully!',
       data: result,
     });
   } catch (error: unknown) {
@@ -66,4 +92,5 @@ export const ProductControllers = {
   createProduct,
   getAllProducts,
   getProductById,
+  updateProductById,
 };
