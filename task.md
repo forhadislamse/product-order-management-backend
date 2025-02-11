@@ -246,6 +246,7 @@
 - **Endpoint**: **`/api/products/:productId`**
 - **Method: `DELETE`**
 - **Sample Response**:
+
   ```json
   {
     "success": true,

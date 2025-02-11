@@ -28,14 +28,16 @@ const createProduct = async (req: Request, res: Response) => {
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
-    // const regex = new RegExp(`^${searchTerm}$`, 'i'); //for exact match regExp object
-    const regex = new RegExp(searchTerm as string, 'i'); //for partial match regExp object
-    // console.log(searchTerm);
-    let filter = {};
-    let message = 'Products fetched successfully!'; // Default message
+    // const {price } = req.query;
 
+    // console.log(searchTerm, price);
+    // let filter: any = {};
+    let filter: Record<string, unknown> = {}; //for filter any
+    let message = 'Products fetched successfully!'; // Default message
     if (searchTerm) {
-      const searchString = searchTerm.toString(); // Ensure it's a string
+      const searchString = searchTerm.toString().trim(); // Ensure it's a string
+      // const regex = new RegExp(`^${searchString}$`, 'i'); //for exact match regExp object
+      const regex = new RegExp(searchString, 'i'); //for partial match regExp object
       const numValue = Number(searchString);
       const boolValue =
         searchString.toLowerCase() === 'true'
@@ -52,9 +54,10 @@ const getAllProducts = async (req: Request, res: Response) => {
           { tags: { $regex: regex } },
           { 'variants.type': { $regex: regex } }, // Search in variants type
           { 'variants.value': { $regex: regex } }, //  Search in variants value
-          { 'inventory.quantity': !isNaN(numValue) ? numValue : undefined }, // partial match for inventory quantity
-          { 'inventory.inStock': boolValue !== null ? boolValue : undefined }, // partial Match stock status
+          { 'inventory.quantity': !isNaN(numValue) ? numValue : undefined }, //Match exact quantity (if valid number)
+          { 'inventory.inStock': boolValue !== null ? boolValue : undefined }, // Match `true` or `false`
         ],
+
         /* $or: [
           { name: regex }, // Exact match for name
           { description: regex }, // Exact match for description
@@ -67,6 +70,12 @@ const getAllProducts = async (req: Request, res: Response) => {
         ], */
       };
     }
+    /* if (price) {
+      const priceValue = Number(price);
+      if (!isNaN(priceValue)) {
+        filter.price = priceValue; // Exact match for price
+      }
+    } */
     const result = await ProductServices.getAllProductsFromDb(filter);
     // Dynamically modify message based on the searchTerm and results
     if (searchTerm && result.length > 0) {
@@ -74,6 +83,11 @@ const getAllProducts = async (req: Request, res: Response) => {
     } else if (searchTerm && result.length === 0) {
       message = `No products found matching search term '${searchTerm}'.`;
     }
+    /*  if (price && result.length > 0) {
+      message = `Products matching search term '${price}' fetched successfully!`;
+    } else {
+      message = `No products found matching search term '${price}'.`;
+    } */
     res.status(200).json({
       success: true,
       message,
