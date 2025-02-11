@@ -27,10 +27,56 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductsFromDb();
+    const { searchTerm } = req.query;
+    // const regex = new RegExp(`^${searchTerm}$`, 'i'); //for exact match regExp object
+    const regex = new RegExp(searchTerm as string, 'i'); //for partial match regExp object
+    // console.log(searchTerm);
+    let filter = {};
+    let message = 'Products fetched successfully!'; // Default message
+
+    if (searchTerm) {
+      const searchString = searchTerm.toString(); // Ensure it's a string
+      const numValue = Number(searchString);
+      const boolValue =
+        searchString.toLowerCase() === 'true'
+          ? true
+          : searchString.toLowerCase() === 'false'
+            ? false
+            : null;
+      filter = {
+        // any of the or can work and save it for further update
+        $or: [
+          { name: regex },
+          { description: { $regex: regex } },
+          { category: { $regex: regex } },
+          { tags: { $regex: regex } },
+          { 'variants.type': { $regex: regex } }, // Search in variants type
+          { 'variants.value': { $regex: regex } }, //  Search in variants value
+          { 'inventory.quantity': !isNaN(numValue) ? numValue : undefined }, // partial match for inventory quantity
+          { 'inventory.inStock': boolValue !== null ? boolValue : undefined }, // partial Match stock status
+        ],
+        /* $or: [
+          { name: regex }, // Exact match for name
+          { description: regex }, // Exact match for description
+          { category: regex }, // Exact match for category
+          { tags: { $in: [regex] } }, //  Match if `tags` array contains the search term
+          { 'variants.type': regex }, //  Exact match in `variants.type`
+          { 'variants.value': regex }, //  Exact match in `variants.value`
+          { 'inventory.quantity': !isNaN(numValue) ? numValue : undefined }, //Match exact quantity (if valid number)
+          { 'inventory.inStock': boolValue !== null ? boolValue : undefined }, // Match `true` or `false`
+        ], */
+      };
+    }
+    const result = await ProductServices.getAllProductsFromDb(filter);
+    // Dynamically modify message based on the searchTerm and results
+    if (searchTerm && result.length > 0) {
+      message = `Products matching search term '${searchTerm}' fetched successfully!`;
+    } else if (searchTerm && result.length === 0) {
+      message = `No products found matching search term '${searchTerm}'.`;
+    }
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
+      message,
       data: result,
     });
   } catch (error: unknown) {
@@ -126,6 +172,7 @@ const deleteProductById = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const ProductControllers = {
   createProduct,
   getAllProducts,
