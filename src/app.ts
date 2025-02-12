@@ -16,11 +16,17 @@ app.use('/api/orders', OrderRoutes);
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World EveryBody!');
 });
-app.all('*', (req: Request, res: Response) => {
+/* app.all('*', (req: Request, res: Response) => {
   res.status(400).json({
     success: false,
     message: 'Route not found',
   });
+}); */
+// Catch-all route for unknown endpoints
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+  });
 });
-
 export default app;

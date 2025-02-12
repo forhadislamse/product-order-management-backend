@@ -73,11 +73,12 @@ const getAllOrders = async (req: Request, res: Response) => {
     }
     const result = await OrderServices.getAllOrdersFromDb(filter);
     // Dynamically modify message based on the searchTerm and results
-    message =
-      email && result.length > 0
-        ? `Orders fetched successfully for user email '${email}'`
-        : `No Order found matching search term '${email}'`;
-
+    if (email) {
+      message =
+        result.length > 0
+          ? `Orders fetched successfully for user email '${email}'`
+          : `No Order found matching search term '${email}'`;
+    }
     res.status(200).json({
       success: true,
       message,
