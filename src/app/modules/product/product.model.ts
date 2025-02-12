@@ -25,7 +25,7 @@ const productSchema = new Schema<TProduct>(
     variants: { type: [variantSchema], required: true },
     inventory: { type: inventorySchema, required: true },
   },
-  //replace version key: 0
+  //replace version key: 0 if we we need
   { versionKey: false },
 );
 

@@ -1,13 +1,46 @@
 import { Request, Response } from 'express';
 import { OrderServices } from './order.services';
 import orderValidationSchema from './order.zodValidation';
+import { Product } from '../product/product.model';
 
-const createOrder = async (req: Request, res: Response) => {
+const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const orderData = req.body;
+    const { email, productId, quantity, price } = req.body;
+    const orderData = { email, productId, quantity, price };
     // console.log(orderData);
     const zodParsedData = orderValidationSchema.parse(orderData);
+
+    // Check if the product exists in the inventory
+    const product = await Product.findById(productId);
+    // console.log(product);
+    if (!product) {
+      res.status(404).json({ success: false, message: 'Product not found.' });
+      return;
+    }
+    // Check if the requested quantity is available in stock
+    if (product.inventory.quantity < quantity) {
+      res.status(400).json({
+        success: false,
+        message: 'Insufficient quantity available in inventory',
+      });
+      return;
+    }
+    // Reduce the quantity in inventory and update stock status
+    product.inventory.quantity -= quantity;
+
+    // If inventory reaches 0, update `inStock` to `false`
+    product.inventory.inStock = product.inventory.quantity > 0;
+
+    // Save the updated product inventory
+    await product.save();
+
     const result = await OrderServices.createOrderIntoDb(zodParsedData);
+    if (!result) {
+      res.status(404).json({
+        success: false,
+        message: 'Order not created',
+      });
+    }
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
@@ -34,9 +67,9 @@ const getAllOrders = async (req: Request, res: Response) => {
     let message = 'Orders fetched successfully!'; // Default message
     if (email) {
       const searchEmail = email.toString().trim(); // Ensure it's a string
-      console.log(searchEmail, email);
+      //   console.log(searchEmail, email);
       filter.email = searchEmail;
-      console.log(filter.email);
+      //   console.log(filter.email);
     }
     const result = await OrderServices.getAllOrdersFromDb(filter);
     // Dynamically modify message based on the searchTerm and results
