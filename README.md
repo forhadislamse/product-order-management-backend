@@ -28,11 +28,9 @@ Before starting the project we should ensure that we have the following software
 ```
    git clone https://github.com/forhadislamse/product-order-management-backend.git
    cd product-order-management-backend
-   <!-- Using npm: -->
-
+   // Using npm:
    npm install
-   <!-- Or, using yarn: -->
-
+   // Or, using yarn:
    yarn install
 ```
 
@@ -94,16 +92,17 @@ To automatically format your code with Prettier (ignoring .gitignore files), use
 - Before order created check products and inventory updates
 - Validation using Zod
 - Project set up with eslint and prettier
+- Error handling for `Route not found` `insufficient quantity` `Product or Order not found`
 
 ## Technologies Used
 
 - **[Express](https://expressjs.com/)**: Fast, unopinionated, minimalist web framework for Node.js.
 - **[TypeScript](https://www.typescriptlang.org/)**: Strongly typed programming language that builds on JavaScript.
-- **[MongoDB](https://www.mongodb.com/)**: Flexible, scalable, and high-performance NoSQL database that utilizes a document-oriented data model
+- **[MongoDB](https://www.mongodb.com/)**: Flexible, scalable, and high-performance NoSQL database that utilizes a document-oriented data model.
 - **[Mongoose](https://mongoosejs.com/)**: Elegant MongoDB object modeling for Node.js.
 - **[Zod](https://github.com/colinhacks/zod)**: TypeScript-first schema declaration and validation library.
 - **[ESlint](https://eslint.org/)**: Find and fix problems in your JavaScript code.
-- **[Prettier]https://prettier.io/docs/)**: Prettier is an opinionated code formatter.
+- **[Prettier](https://prettier.io/docs/)**: Prettier is an opinionated code formatter.
 
 ## Folder Structure
 
@@ -165,7 +164,7 @@ src
 }
 ```
 
--- **Sample Response**:
+- **Sample Response**:
 
 ```json
 {
@@ -506,7 +505,7 @@ src
 
 **Sample Error Responses**
 
-- Insufficient Quantity Error: product.inventory.quantity < quantity
+- `Insufficient Quantity Error`: product.inventory.quantity < quantity
 
 ```jsx
 {
@@ -516,7 +515,7 @@ src
 
 ```
 
-- Not Found Error: if no product exist by searching productId then no order created
+- `Not Found Error`: if no product exist by searching productId then no order created
 
 ```jsx
 {
@@ -525,7 +524,7 @@ src
 }
 ```
 
-- Not Found Route: if no matching routes then response will be
+- `Not Found Route`: if no matching routes then response will be
 
 ```jsx
 {
@@ -533,3 +532,9 @@ src
  "message": "Route not found"
 }
 ```
+
+## Licenses:
+
+//add this section later
+
+## Happy Coding
