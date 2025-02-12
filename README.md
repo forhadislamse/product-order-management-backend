@@ -8,6 +8,7 @@ This is a Basic backend API for managing an e-commerce platform, including featu
 - [Installation](#installation)
 - [Running the Application](#running-the-application)
 - [Features](#features)
+- [Technology Used](#technology-used)
 - [Folder Structure](#folder-structure)
 - [API Endpoints](#api-endpoints)
 - [Licenses](#licenses)
@@ -24,21 +25,23 @@ Before starting the project we should ensure that we have the following software
 
 1. Clone the repository:
 
-   ```
+   ``
    git clone https://github.com/forhadislamse/product-order-management-backend.git
    cd product-order-management-backend
    <!-- Using npm: -->
+
    npm install
    <!-- Or, using yarn: -->
+
    yarn install
-   ```
+   ``
 
 2. Create a .env file in the root of the project directory to store environment variables. Example .env file:
 
-````
+```
 PORT=port number
-DATABASE_URL=mongodb atlas connection```
-````
+DATABASE_URL=mongodb atlas connection
+```
 
 ## Running the Application
 
@@ -104,6 +107,7 @@ npm run prettier:fix```
 ```
 
 ```
+
 ```
 src
 ├── app
