@@ -1,6 +1,8 @@
 ## Project Structure
 
 ```
+.env
+tsconfig.jsonFolder PATH listing for volume Software Volume serial number is 0000008E FE89:1AC7
 Folder PATH listing for volume Software
 Volume serial number is 000000F3 FE89:1AC7
 F:\PROJECTS2\MONGOOSE\LEARN-MONGOOSE\ASSIGNMENT2\PRODUCT-ORDER-MANAGEMENT-BACKEND\SRC
