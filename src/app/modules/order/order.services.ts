@@ -9,8 +9,13 @@ const getAllOrdersFromDb = async (filter: object) => {
   const result = await Order.find(filter);
   return result;
 };
+const getOrderByIdFromDb = async (id: string) => {
+  const result = await Order.findById({ _id: id });
+  return result;
+};
 
 export const OrderServices = {
   createOrderIntoDb,
   getAllOrdersFromDb,
+  getOrderByIdFromDb,
 };

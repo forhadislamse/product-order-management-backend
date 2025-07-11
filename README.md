@@ -472,7 +472,27 @@ src
 }
 ```
 
-#### **3. Retrieve Orders by User Email**
+#### **3. Retrieve a Specific Order by ID**
+
+- **Endpoint**: **`/api/orders/:orderId`**
+- **Method: `GET`**
+- **Sample Response**:
+
+```json
+{
+  "success": true,
+  "message": "specific Order fetched successfully!",
+  "data": {
+    "_id": "67ab59b6acf6536334ca9d1c",
+    "email": "level2@programming-hero.com",
+    "productId": "67a99288e5a09dadb62ef299",
+    "price": 999,
+    "quantity": 1
+  }
+}
+```
+
+#### **4. Retrieve Orders by User Email**
 
 - **Endpoint**: `/api/orders?email=level2@programming-hero.com`
 - **Method:** `GET`
